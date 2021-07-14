@@ -64,3 +64,18 @@ const logger = console.log;
 logger(validAnagram('', '')); // true
 logger(validAnagram('aaz', 'zza')); // false
 logger(validAnagram('anagram', 'nagaram')); // true
+
+function sum(nums, target) {
+  let lookup = {};
+  for (num in nums) {
+    if (lookup[target - nums[num]]) {
+      if (target - nums[num] + nums[num] === target) {
+        return [lookup[target - nums[num]], num];
+      }
+    } else {
+      lookup[nums[num]] = num;
+    }
+  }
+}
+
+console.log(sum([3, 2, 4], 6));
