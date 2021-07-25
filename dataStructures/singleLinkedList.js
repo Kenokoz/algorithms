@@ -117,6 +117,7 @@ class SinglyLinkedList {
   //           node
   //          [1] -> [2] -> [3] -> [4]
   //  prev           next
+  // 2 -> 1 -> null
   reverse() {
     let node = this.head;
     this.head = this.tail;
