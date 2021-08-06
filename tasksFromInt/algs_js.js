@@ -706,3 +706,19 @@ console.log(threeFum([1, 1, -2], 0));
 console.log(threeFum([-2, 0, 1, 1, 2], 0));
 
 ////////////////////////
+
+one = function (callback) {
+  return callback ? callback(1) : 1;
+};
+
+three = function (callback) {
+  return callback ? callback(3) : 3;
+};
+
+plus = function (a) {
+  return b => a + b;
+};
+
+console.log(one(plus(three())));
+
+////////////////////////
