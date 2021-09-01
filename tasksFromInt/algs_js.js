@@ -722,3 +722,19 @@ plus = function (a) {
 console.log(one(plus(three())));
 
 ////////////////////////
+
+Function.prototype.myBind = function (context) {
+  const func = this;
+  return function (...args) {
+    return func.apply(context, args);
+  };
+};
+
+///////////////////////
+
+Function.prototype.newBindWithoutApply = function (ctx, ...args) {
+  ctx.fnCall = this;
+  return () => {
+    return ctx.fnCall(...args);
+  };
+};
