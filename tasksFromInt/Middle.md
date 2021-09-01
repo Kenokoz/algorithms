@@ -316,6 +316,21 @@ const p2 = new Promise(resolve => {
 }).then(() => console.log(7));
 
 // 4 6 2 7 3 5 1
+
+Promise.resolve(console.log(1)).then(() => console.log(2));
+
+Promise.resolve()
+  .then(() => console.log(3))
+  .then(console.log(4));
+
+Promise.reject(5).then(
+  () => {},
+  n => console.log(n)
+);
+
+console.log(6);
+
+// 1 4 6 2 3 5
 ```
 
 ---
@@ -357,3 +372,106 @@ console.log('d');
 - requestAnimationFrame
 - Cookie vs LS vs SS
 - дебаггинг
+
+```javascript
+//'use strict'
+
+let phrase = 'Hello';
+if (true) {
+  let user = 'John';
+  function sayHi() {
+    alert(`${phrase}, ${user}`);
+  }
+}
+sayHi(); // нельзя в useStrict
+
+//////////////////////////////
+
+let user = {
+  firstName: 'Вася',
+  sayHi() {
+    alert(`Привет, ${this.firstName}!`);
+  },
+};
+
+setTimeout(user.sayHi, 1000); // undefind
+
+// 01. Есть 3 вложенных элемента FORM > DIV > P, с обработчиком на каждом:
+// Какой(какие) alert'ы вызовутся при клике на DIV
+
+<form onclick="alert('form')">
+  FORM
+  <div onclick="alert('div')">
+    DIV
+    <p onclick="alert('p')">P</p>
+  </div>
+</form>;
+
+// 02. Как будет порядок вызовов ?
+
+console.log('1');
+Promise.resolve(console.log('2'));
+setTimeout(function cb1() {
+  console.log('3');
+}, 2000);
+setTimeout(function cb() {
+  console.log('4');
+});
+console.log('5');
+setTimeout(function cb1() {
+  console.log('6');
+}, 0);
+new Promise((res, rj) => res('7')).then(console.log);
+console.log('8');
+
+// 1 2 5 8 7 4 6 3
+
+// 03. Какой будет результат у вызова sayHi?
+// ('use strict');
+let phrase = 'Hello';
+if (true) {
+  let user = 'John';
+  function sayHi() {
+    alert(`${phrase}, ${user}`);
+  }
+}
+sayHi();
+
+// 04. Какой будет результат выполнения кода?
+
+let user = {
+  firstName: 'Вася',
+  sayHi() {
+    alert(`Привет, ${this.firstName}!`);
+  },
+};
+setTimeout(user.sayHi, 1000);
+
+// 05 Описать функцию, которая вернет массив из online users с добавленным department
+
+const users = [
+  { name: Maxim, id: 'uuid1', online: true },
+  { name: Andrew, id: 'uuid2', online: false },
+  { name: Alex, id: 'uuid3', online: true },
+  { name: Peter, id: 'uuid4', online: false },
+];
+
+const dto = { department: 'SMB' };
+
+function addDto(users) {
+  return users.filter(u => u.online).map(u => ({ ...u, ...dto }));
+}
+
+// 05. Сортировать по имени ASC и по возрасту DESC
+
+// var persons = [
+//     { name: "Harry", age: 14 },
+//     { name: "Ethan", age: 30 },
+//     { name: "Alice", age: 66 }
+//     { name: "Peter", age: 21 },
+//     { name: "Clark", age: 42 },
+//     { name: "Alice", age: 16 }
+//     { name: "Ethan", age: 30 },
+// ];
+persons.sort((a, b) => (a.name > b.name ? 1 : -1));
+```
