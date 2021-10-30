@@ -293,11 +293,11 @@ console.log(a);
 
 ```javascript
 Promise.reject('a')
-  .catch(p => p + 'b')
-  .catch(p => p + 'с')
-  .then(p => p + 'd')
-  .finally(p => p + 'e')
-  .then(p => console.log(p));
+  .catch((p) => p + 'b')
+  .catch((p) => p + 'с')
+  .then((p) => p + 'd')
+  .finally((p) => p + 'e')
+  .then((p) => console.log(p));
 // abd
 
 setTimeout(() => console.log(1), 0);
@@ -310,7 +310,7 @@ console.log(4);
 
 p.then(() => console.log(5));
 
-const p2 = new Promise(resolve => {
+const p2 = new Promise((resolve) => {
   console.log(6);
   resolve();
 }).then(() => console.log(7));
@@ -325,7 +325,7 @@ Promise.resolve()
 
 Promise.reject(5).then(
   () => {},
-  n => console.log(n)
+  (n) => console.log(n)
 );
 
 console.log(6);
@@ -339,17 +339,17 @@ console.log(6);
 setTimeout(() => console.log('a'));
 
 Promise.resolve()
-  .then(first => {
+  .then((first) => {
     console.log(first);
     return 'b';
   })
   .then(
-    Promise.resolve().then(second => {
+    Promise.resolve().then((second) => {
       console.log(second);
       return 'c';
     })
   )
-  .then(third => console.log(third));
+  .then((third) => console.log(third));
 
 console.log('d');
 
@@ -459,7 +459,7 @@ const users = [
 const dto = { department: 'SMB' };
 
 function addDto(users) {
-  return users.filter(u => u.online).map(u => ({ ...u, ...dto }));
+  return users.filter((u) => u.online).map((u) => ({ ...u, ...dto }));
 }
 
 // 05. Сортировать по имени ASC и по возрасту DESC
@@ -474,4 +474,267 @@ function addDto(users) {
 //     { name: "Ethan", age: 30 },
 // ];
 persons.sort((a, b) => (a.name > b.name ? 1 : -1));
+
+//////////////////////////////
+
+var a = 10;
+
+if (true) {
+  var a = 20;
+}
+
+console.log(a);
+
+if (false) {
+  var a = 30;
+}
+
+console.log(a);
+
+//////////////////////////////
+
+console.log(a);
+
+var a = 5;
+
+function a() {
+  return 10;
+}
+
+console.log(a);
+
+//Раньше всплывает functional declaration
+//Объявления функций «поднимаются» над объявлением переменных, но не над их назначениями.
+
+var double = 22;
+
+function double(num) {
+  return num * 2;
+}
+
+console.log(typeof double); // Вывод: number
+
+var test;
+
+function test(num) {
+  return num * 2;
+}
+
+console.log(typeof test); // Вывод: function
+
+/////////////////////////////
+
+var a = 'hello';
+
+function b() {
+  if (false) {
+    var a = 'world';
+  } else {
+    var b = 'man';
+  }
+
+  console.log(b);
+  console.log(a);
+}
+
+b();
+
+console.log(a);
+
+//почему не как task1?
+
+////////////////////////////////
+
+var a = 1;
+
+(function () {
+  console.log(a);
+  var a = 2;
+})();
+
+function a() {
+  console.log(this);
+}
+
+a.call(null)(
+  ///////////////////////////////
+
+  function () {
+    f();
+    f = function () {
+      console.log(1);
+    };
+  }
+)();
+
+f();
+var f = 10;
+f();
+
+function f() {
+  console.log(2);
+}
+
+// 2 1 error
+
+//////////////////////////////
+
+var a = 1;
+
+function b() {
+  a = 10;
+  return 20;
+  function a() {}
+}
+
+b();
+
+console.log(a);
+
+//////////////////////////////
+
+//Разобрать Что будет результатом Промисов на Каждом Этапе
+
+function func1() {
+  return Promise.resolve('1');
+}
+
+function func2() {
+  return Promise.resolve('2');
+}
+function func3(res) {
+  return console.log(res);
+}
+
+//   func1()
+//  .then(function() {
+//    return func2();
+//  })
+//  .then(func3);
+
+//   func1()
+//   .then(function() {
+//      func2();
+//   })
+//  .then(func3)
+
+//   func1()
+//  .then(func2())
+//  .then(func3);
+
+//  func1()
+//  .then(func2)
+//  .then(func3);
+
+//=-----------=------------=------------=------------=
+
+Promise.resolve(55)
+  .then((value) => {
+    console.log(value); //55
+    throw new Error('123');
+  })
+  .then((value) => console.log(value))
+  .catch((error) => console.log(error.message)) //123
+  .then(
+    (value) => console.log(value),
+    (error) => console.log(error)
+  ) // undefined
+  .then(finalHandler())
+  .then(finalHandler);
+
+function finalHandler() {
+  console.log('finalHandler');
+}
+
+//=-----------=------------=------------=------------=
+
+Promise.resolve(55)
+  .then(function (val) {
+    console.log(val); //55
+    throw new Error();
+  })
+  .then((val) => console.log('then', val))
+  .catch((val) => {
+    console.log('catch', val); //catch error
+
+    return Promise.reject();
+  })
+  .then(finalHandler, finalHandler1)
+  .then(finalHandler, finalHandler1)
+  .then(finalHandler, finalHandler1);
+
+function finalHandler() {
+  console.log('finalHandler');
+}
+function finalHandler1() {
+  console.log('finalHandler1');
+}
+
+//=-----------=------------=------------=------------=
+
+let promise = new Promise((resolve, reject) => {
+  setTimeout(() => reject(new Error('error')), 1000);
+  setTimeout(() => resolve('OK'), 2000);
+});
+
+promise.then(
+  (result) => console.log('Fulfilled: ' + result),
+  (error) => console.log('Rejected: ' + error)
+);
+
+Promise.resolve(44)
+  .then((a1) => console.log('a1 1', a1) || a1) // a1 1 44
+  .then(doSomething)
+  .then(doSomethingElse());
+/* .then((a4) => console.log('a4 2', a4)) */
+
+function doSomething(b) {
+  return new Promise((res, rej) => {
+    // setTimeout(() => {
+    console.log('res 22');
+    console.log(b);
+    res(b);
+    // }, 2000);
+  });
+}
+
+function doSomethingElse(b) {
+  return new Promise((res, rej) => {
+    // setTimeout(() => {
+    console.log('res 33');
+    console.log(b);
+    res(b);
+    //  }, 1000);
+  });
+}
+
+Promise.reject('a')
+  .catch((p) => p + 'b') //ab
+  .catch((p) => p + 'с')
+  .then((p) => p + 'd') //abd
+  .finally((p) => p + 'e')
+  .then((p) => console.log(p));
+
+console.log('f');
+
+Promise.reject('start')
+  .finally((val) => {
+    console.log('finally-1', val); //fin 1 und
+    return 'one';
+  })
+  .catch((val) => {
+    console.log('catch-2', val); // catch 2 start
+  })
+  .finally((val) => {
+    console.log('finally-3', val); //fin 3 und
+    return 'three';
+  })
+  .then((val) => {
+    console.log('then-4', val); // then-4 und
+    return 'four';
+  })
+  .finally((val) => {
+    console.log('finally-5', val); // fin 5 und
+  })
+  .then((val) => console.log('result', val)); // res four
 ```
