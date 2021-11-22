@@ -682,6 +682,8 @@ promise.then(
   (error) => console.log('Rejected: ' + error)
 );
 
+//=-----------=------------=------------=------------=
+
 Promise.resolve(44)
   .then((a1) => console.log('a1 1', a1) || a1) // a1 1 44
   .then(doSomething)
@@ -707,6 +709,8 @@ function doSomethingElse(b) {
     //  }, 1000);
   });
 }
+
+//=-----------=------------=------------=------------=
 
 Promise.reject('a')
   .catch((p) => p + 'b') //ab
@@ -737,4 +741,67 @@ Promise.reject('start')
     console.log('finally-5', val); // fin 5 und
   })
   .then((val) => console.log('result', val)); // res four
+
+//=-----------=------------=------------=------------=
+
+  var f = function() {
+  this.x = 5;
+  (function() {
+      this.x = 3;
+  })();
+  console.log(this.x);
+};
+
+var obj = {
+  x: 4, 
+  m: function() {
+    console.log(this.x);
+  }
+};
+
+
+f();
+new f();
+obj.m();
+new obj.m();
+f.call(f);
+obj.m.call(f);
+
+//=-----------=------------=------------=------------=
+
+function foo() {
+  const x = 10;
+  return {
+    x: 20,
+    bar: () => {
+      console.log(this.x) //und
+    },
+    bah: function () {
+      console.log(this.x) // 20
+    },
+    baz() {
+      console.log(this.x) // 20
+    }
+  }
+}
+
+const obj1 = foo();
+obj1.bar();
+obj1.bah.call({x: 30});
+obj1.baz();
+
+//=-----------=------------=------------=------------=
+
+function Book(name, author) {
+  this.name = name;
+  this.author = author;
+  return this;
+}
+
+function Foo(Cclass, name, author) {
+  return Cclass.call({}, name, author);
+}
+
+const foo = Foo(Book, 'name', 'auth');
+console.log(foo);
 ```
