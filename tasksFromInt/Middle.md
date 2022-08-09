@@ -873,7 +873,7 @@ console.log(o.d); // undefined
 function myMap() {
 	let counter = 0;
 	const old = Array.prototype.map;
-	
+
 	return function() {
 		console.log(counter);
 		counter++;
@@ -882,5 +882,78 @@ function myMap() {
 }
 
 Array.prototype.map = myMap();
+
+//=-----------=------------=------------=------------=
+
+1[0] // und
+1.toString() // err
+1..toString() // '1'
+
+//=-----------=------------=------------=------------=
+
+function User() {}
+User.prototype = { admin: false };
+
+let user = new User();
+User.prototype = { admin: true };
+
+console.log(user.admin) // false
+
+//=-----------=------------=------------=------------=
+
+const login = async (counter = 3) => {
+	const sleep = (ms) => {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	};
+
+	try {
+		const resp = await fetch('https://jsonplaceholder.typicode.com/toos/1');
+		const data = await resp.json();
+		if (!resp.ok) {
+			throw new Error(resp.status);
+		}
+		return data;
+	} catch (e) {
+		await sleep(500);
+		if (counter <= 1) {
+			return console.log('что-то пошло не так');
+		}
+		return await login(counter - 1);
+	}
+};
+
+//=-----------=------------=------------=------------=
+
+NaN + 1 // NaN
+null + 1 // 0 + 1
+-5 / null // -Infinity
+NaN + 1 // NaN
+null == 0 // false
+null > 0 // false
++{} // NaN
+
+//=-----------=------------=------------=------------=
+
+const [counter, setCounter] = useState(0);
+
+console.log('render', counter);
+
+useEffect(() => {
+	console.log('effect', counter);
+
+	return () => {
+		console.log('clean', counter);
+	};
+}, [counter]);
+
+useEffect(() => {
+	setCounter((prev) => prev + 1);
+}, []);
+
+// render 0
+// effect 0
+// render 1
+// clean 0
+// effect 1
 
 ```
